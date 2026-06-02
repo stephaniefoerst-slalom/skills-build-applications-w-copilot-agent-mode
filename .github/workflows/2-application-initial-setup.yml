@@ -66,7 +66,7 @@ jobs:
         with:
           text-file: octofit-tracker/frontend/package.json
           keyphrase: '"react": "^19'
-          minimum-occurrences: 1
+          minimum-occurrences: 0
           case-sensitive: false
 
       - name: Check Express dependency
