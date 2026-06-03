@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import DataState from './DataState.jsx'
 import { apiUrl, normalizeCollection } from '../api.js'
 
-const ENDPOINT_PATH = '/api/activities/'
+const ENDPOINT_PATH = '/api/activities'
 
 function userName(activity) {
   return activity.userId?.name || activity.user?.name || 'Unknown user'
