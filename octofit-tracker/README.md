@@ -76,7 +76,15 @@ Create a `.env` file in the backend directory if needed:
 MONGODB_URI=mongodb://localhost:27017/octofit-tracker
 PORT=8000
 NODE_ENV=development
+CODESPACE_NAME=your-codespace-name
 ```
+
+When `CODESPACE_NAME` is set, the API advertises and accepts the Codespaces URL:
+`https://$CODESPACE_NAME-8000.app.github.dev`. Without it, the API uses
+`http://localhost:8000`.
+
+The frontend uses the same `CODESPACE_NAME` value through Vite and builds API
+URLs with `src/api.js`.
 
 ## Available Scripts
 
@@ -108,6 +116,8 @@ NODE_ENV=development
 Test the backend with:
 ```bash
 curl http://localhost:8000/health
+curl http://localhost:8000/api/users
+curl http://localhost:8000/api/activities
 ```
 
 Expected response:
