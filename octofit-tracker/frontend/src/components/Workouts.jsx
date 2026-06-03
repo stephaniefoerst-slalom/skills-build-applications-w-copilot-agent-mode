@@ -1,8 +1,50 @@
+import { useEffect, useState } from 'react'
 import DataState from './DataState.jsx'
-import { useApiCollection } from './useApiCollection.js'
+import { apiUrl, normalizeCollection } from '../api.js'
+
+const ENDPOINT_PATH = '/api/workouts/'
 
 function Workouts() {
-  const { error, isLoading, items: workouts } = useApiCollection('workouts')
+  const [workouts, setWorkouts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadWorkouts() {
+      try {
+        setIsLoading(true)
+        setError('')
+
+        const response = await fetch(apiUrl(ENDPOINT_PATH))
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`)
+        }
+
+        const payload = await response.json()
+
+        if (isMounted) {
+          setWorkouts(normalizeCollection(payload))
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError.message)
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadWorkouts()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
     <section>

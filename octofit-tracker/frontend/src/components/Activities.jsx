@@ -1,12 +1,54 @@
+import { useEffect, useState } from 'react'
 import DataState from './DataState.jsx'
-import { useApiCollection } from './useApiCollection.js'
+import { apiUrl, normalizeCollection } from '../api.js'
+
+const ENDPOINT_PATH = '/api/activities/'
 
 function userName(activity) {
   return activity.userId?.name || activity.user?.name || 'Unknown user'
 }
 
 function Activities() {
-  const { error, isLoading, items: activities } = useApiCollection('activities')
+  const [activities, setActivities] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadActivities() {
+      try {
+        setIsLoading(true)
+        setError('')
+
+        const response = await fetch(apiUrl(ENDPOINT_PATH))
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`)
+        }
+
+        const payload = await response.json()
+
+        if (isMounted) {
+          setActivities(normalizeCollection(payload))
+        }
+      } catch (loadError) {
+        if (isMounted) {
+          setError(loadError.message)
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadActivities()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
     <section>
