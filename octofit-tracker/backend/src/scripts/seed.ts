@@ -52,7 +52,7 @@ async function seedDatabase() {
 
   await Workout.insertMany([
     {
-      title: 'After-School 5K Builder',
+      title: 'After-School 10K Builder',
       description: 'A steady run-walk session designed to build endurance for new runners.',
       difficulty: 'beginner',
       durationMinutes: 30,
